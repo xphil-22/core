@@ -73,7 +73,15 @@ class CrealityApi:
         try:
             json_data = json.loads(websocket_data)
             for callback in self.callbacks:
-                callback(json_data)
+                await callback(json_data)
 
         except json.JSONDecodeError as e:
             logger.error("Received invalid json: %s", e)
+
+    async def send_message(self, message):
+        """Send a message to the WebSocket server.
+
+        :param message: The message to send as a dictionary.
+        """
+        if self.ws:
+            await self.ws.send_json(message)

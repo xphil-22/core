@@ -1,4 +1,4 @@
-"""Module to define the CrealityDataUpdateCoordinator class for managing data updates from Creality printers."""
+"""Module defines the CrealityDataUpdateCoordinator class for managing data updates from Creality printers."""
 
 import logging
 
@@ -37,3 +37,9 @@ class CrealityDataUpdateCoordinator(DataUpdateCoordinator):
     async def async_close(self):
         """Close the API connection."""
         await self.api.close()
+
+    async def _async_update_data(self):
+        """Do not use this method."""
+        # return None  # Returning None as the data is pushed
+        # raise NotImplementedError
+        return None

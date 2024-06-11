@@ -19,6 +19,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Creality K1 from a config entry."""
     hass.data.setdefault(DOMAIN, {})
     uri = f"ws://{entry.data['host']}:{entry.data['port']}"
+    # uri = "ws://100.122.222.170:8765"
     uri = "ws://100.122.222.209:9999"
     # 1. Create API instance
     api = CrealityApi(uri)
