@@ -929,6 +929,12 @@
       "config_flow": true,
       "iot_class": "local_push"
     },
+    "creality_k_one": {
+      "name": "Creality K1",
+      "integration_type": "hub",
+      "config_flow": true,
+      "iot_class": "local_push"
+    },
     "crownstone": {
       "name": "Crownstone",
       "integration_type": "hub",

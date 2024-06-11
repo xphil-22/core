@@ -84,6 +84,7 @@ FLOWS = {
         "control4",
         "coolmaster",
         "cpuspeed",
+        "creality_k_one",
         "crownstone",
         "daikin",
         "deconz",
