@@ -45,7 +45,7 @@ class CrealityLight(CoordinatorEntity, LightEntity):
         super().__init__(coordinator)
         self._attr_unique_id = light_id
         self._name = friendly_name
-        self._state = False
+        self._state = None
 
     @property
     def name(self):
@@ -64,24 +64,26 @@ class CrealityLight(CoordinatorEntity, LightEntity):
 
     async def async_added_to_hass(self):
         """Run when entity about to be added to hass."""
-        await super().async_added_to_hass()
+        initial_data = self.coordinator.api.get_initial_data()
+        if initial_data:
+            self._handle_update(initial_data)
 
     async def async_will_remove_from_hass(self):
         """Run when entity about to be removed from hass."""
         await super().async_will_remove_from_hass()
 
+    def _handle_update(self, data):
+        if self._attr_unique_id in data:
+            if isinstance(data[self._attr_unique_id], int):
+                self._state = data[self._attr_unique_id] == 1
+                self.async_write_ha_state()
+
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        logger.error("handle coordinator update with: ")
-        logger.error(self.coordinator.data)
-        if self._attr_unique_id in self.coordinator.data:
-            logger.error("check if bool")
-            logger.error(self.coordinator.data[self._attr_unique_id])
-            if isinstance(self.coordinator.data[self._attr_unique_id], int):
-                logger.error("set new state")
-                self._state = self.coordinator.data[self._attr_unique_id] == 1
-                self.async_write_ha_state()
+        # logger.error("handle coordinator update with: ")
+        # logger.error(self.coordinator.data)
+        self._handle_update(self.coordinator.data)
 
     async def async_turn_on(self, **kwargs):
         """Turn on the light."""

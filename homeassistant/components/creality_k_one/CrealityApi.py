@@ -23,13 +23,14 @@ class CrealityApi:
         self.callbacks = []
         self.listen_task = None
 
+        self._initial_data_event = asyncio.Event()
+        self._initial_data = None
+
     async def connect(self):
         """Connect to the WebSocket server."""
         self.session = ClientSession()
         self.ws = await self.session.ws_connect(self.uri)
         self.listen_task = asyncio.create_task(self.listen())
-        # Store a reference to the task if needed
-        # self.listen_task = task
 
     async def close(self):
         """Close the WebSocket connection."""
@@ -72,6 +73,10 @@ class CrealityApi:
         """
         try:
             json_data = json.loads(websocket_data)
+            if not self._initial_data_event.is_set():
+                self._initial_data = json_data
+                self._initial_data_event.set()
+
             for callback in self.callbacks:
                 await callback(json_data)
 
@@ -85,3 +90,7 @@ class CrealityApi:
         """
         if self.ws:
             await self.ws.send_json(message)
+
+    def get_initial_data(self):
+        """Retrieve the initial data."""
+        return self._initial_data

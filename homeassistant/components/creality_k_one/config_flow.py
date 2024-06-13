@@ -1,4 +1,5 @@
 """Config flow for Creality K1 integration."""
+
 from __future__ import annotations
 
 import logging
